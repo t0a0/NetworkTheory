@@ -1,1 +1,0 @@
-A = load("simgraph.txt")size(A)
