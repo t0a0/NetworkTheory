@@ -1,0 +1,4 @@
+1.2 What information about the network does size() return?
+
+It returns a vector with row dimensions for the matrix A (2, 10).
+
