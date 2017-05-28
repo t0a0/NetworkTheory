@@ -24,3 +24,6 @@ set(gca, 'XScale', 'log', 'YScale', 'log');
 set(gca, 'XMinorTick', 'on', 'YMinorTick', 'on');
 axis tight;
 
+G = gini(A);
+
+
