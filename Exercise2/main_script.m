@@ -16,13 +16,16 @@ degree = compute_degrees(A);
 loglog(1:max(degree), C, '.');
 ylabel('Frequency');
 xlabel('Degree(d)');
-title('Degree distributions')
+title('Degree distributions');
 print -deps degree_distribution.eps
 
 [P] = cumulative_degree_distribution(A);
 stairs(1:max(degree), P);
 set(gca, 'XScale', 'log', 'YScale', 'log');
 set(gca, 'XMinorTick', 'on', 'YMinorTick', 'on');
+ylabel('P(x>=d)');
+xlabel('Degree(d)');
+title('Cumulative Degree Distribution');
 axis tight;
 print -deps cumulative_degree_distribution.eps
 
