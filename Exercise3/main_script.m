@@ -15,6 +15,16 @@ A = sparse(E(:,1), E(:,2), 1, n, n);
 A = A + A';
 endfunction
 
+function [A] = load_sparse_directed(filename)
+  E = load(filename);
+  n = max(max(E));
+  A = sparse(E(:,1), E(:,2), 1, n, n);
+endfunction 
+
+function [degrees] = compute_degrees(A)
+degrees = sum(A');
+endfunction
+
 empty_range = [];
 B = load_sparse("prediction-graph.txt",empty_range);
 
@@ -47,3 +57,19 @@ endfunction
 vec_power_iter = sort(vec, "descend")(1:10);
 diff = norm(vec_power_iter - vec_eigs);
 
+tw = "munmun_twitter_social/out.munmun_twitter_social"
+
+D = load_sparse_directed(tw);
+
+function [v] = power_pr(A) 
+degrees = compute_degrees(A);
+transition_m = A./sum(A)';
+v = ones(size(transition_m),1)*1/size(transition_m)(1);
+threshold = 10;
+do
+  vec_old = v;
+  v = transition_m*v;
+until (norm(vec-vec_old) < threshold && abs(vec - vec_old)<threshold)
+endfunction
+
+pr_vec = power_pr(D);
