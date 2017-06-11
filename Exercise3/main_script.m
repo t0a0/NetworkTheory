@@ -63,7 +63,7 @@ D = load_sparse_directed(tw);
 
 function [v] = power_pr(A) 
 degrees = compute_degrees(A);
-transition_m = A./sum(A)';
+transition_m = A./degrees; #this doesnt work for some strange reason (with smaller matrix it works)
 v = ones(size(transition_m),1)*1/size(transition_m)(1);
 threshold = 10;
 do
