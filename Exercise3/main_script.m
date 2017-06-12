@@ -40,6 +40,7 @@ C = load_sparse(fb,[2, 0, 817037, 1]);
 [x, l]= eigs(C);
 vec_eigs = x/max(x);
 
+
 function [dom, vec] = power_iter(A) 
 dim = size(A)(1);
 vec = ones(dim,1);
@@ -50,12 +51,12 @@ do
   vec = A*vec;
   dom = max(vec);
   vec = vec/dom;
-until (norm(vec-vec_old) < threshold && abs(vec - vec_old)<threshold)
+until (norm(vec-vec_old) < threshold)
 endfunction
 
 [dom,vec] = power_iter(C);
 
-vec_power_iter = sort(vec,"descend");
+vec_power_iter = vec;
 # difference between the 2 vecctors
 diff = norm(vec_power_iter - vec_eigs);
 
