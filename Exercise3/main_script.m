@@ -29,14 +29,15 @@ empty_range = [];
 B = load_sparse("prediction-graph.txt",empty_range);
 
 [U, Lambda] = eig(B);
-
-max_eigen_value = max(Lambda);
-min_eigen_value = min(Lambda);
+# min and max eigen values 
+max_eigen_value = max(diag(Lambda));
+min_eigen_value = min(diag(Lambda));
+# Zero is not an eigen value of our matrix
 
 fb = "facebook-wosn-links/out.facebook-wosn-links";
 
 C = load_sparse(fb,[2, 0, 817037, 1]);
-x= eigs(C, 10);
+[x, l]= eigs(C);
 vec_eigs = x/max(x);
 
 function [dom, vec] = power_iter(A) 
@@ -54,22 +55,35 @@ endfunction
 
 [dom,vec] = power_iter(C);
 
-vec_power_iter = sort(vec, "descend")(1:10);
+vec_power_iter = sort(vec,"descend");
+# difference between the 2 vecctors
 diff = norm(vec_power_iter - vec_eigs);
 
-tw = "munmun_twitter_social/out.munmun_twitter_social"
-
-D = load_sparse_directed(tw);
-
-function [v] = power_pr(A) 
-degrees = compute_degrees(A);
-transition_m = A./degrees; #this doesnt work for some strange reason (with smaller matrix it works)
-v = ones(size(transition_m),1)*1/size(transition_m)(1);
-threshold = 10;
-do
-  vec_old = v;
-  v = transition_m*v;
-until (norm(vec-vec_old) < threshold && abs(vec - vec_old)<threshold)
+function [ids10, degrees10] = top_10_user_by_eigs(eig_vals,graph)
+  M = eig_vals;
+  d = compute_degrees(graph);
+  for i=1:10
+    [col, row] = max(max(M,[],2));
+    ids10(i) = row;
+    M([row],:) = [];
+    degrees10(i) = d(1,row);
+  endfor
 endfunction
 
-pr_vec = power_pr(D);
+#Which are the 10 users with the highest eigenvector centrality? 
+[top10_id_eigs, degrees10] = top_10_user_by_eigs(vec_eigs,C);
+
+function [ids10] = top_10_users_by_degrees(graph)
+ M = compute_degrees(graph);
+ for i=1:10
+  [row, col] = max(max(M,[],1));
+  ids10(i) = col;
+  M(:,[col]) = [];
+ endfor
+endfunction
+
+#What are the 10 users with highest degree in the network?
+top10_id_degree = top_10_users_by_degrees(C);
+
+#Do they correspond to the 10 users with highest eigenvector centrality? Why? 
+#NO. Because they are not the most connected, but they are close to important nodes
