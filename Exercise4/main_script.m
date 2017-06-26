@@ -67,7 +67,7 @@ A = load_sparse_as_identical('net.txt');
 fof_A = A*A;
 #Using the square of the eigenvalues in the eigenvalue decomposition A = UΛUT
 [u, lambda] = eigs(A,16);
-eig_sqr = u * u;
+eig_sqr = u * (lambda*lambda) * u';
 
 # Are both resulting matrices identical? Why?
 
@@ -93,3 +93,33 @@ TF1 = scores(:,2)==n;
 scores(TF1,:) = [];
 endfunction
 recomendations = link_prediction(A,7);
+
+#task 3
+
+#Use the eigenvalue decomposition of the above mentioned network’s adjacency
+#matrix A to compute the link prediction function e 0.1A
+
+[evect, l] = eig(A);
+
+link_prediction_exp = evect * exp(0.1*A) * evect'; 
+
+#Compare the link prediction values of the pairs (1, 2), (1, 3) and (1, 4). 
+#Which node pair has the highest link prediction score? Which has the lowest? Why?
+link_prediction_exp(1,2)
+link_prediction_exp(1,3)
+link_prediction_exp(1,4)
+# Pair (1,2) is the lowest, and (1,3) has the largest score. This is because 3 i
+# is better connected then 2 and closer than 4.
+
+#Consider the node pairs (7, 1) and (7, 16). Do both pairs have the same link 
+#prediction score? If yes, why; and if not, why not?
+link_prediction_exp(7,1)
+link_prediction_exp(7,16)
+# Pair (7,16) has a larger score because 16 is connected to a more important node
+# which is connected to even more important nodes, unlike node 1. 
+
+#Compute the friend recommendations for user number 7 based on the matrix exponential e
+#0.1A, using the same rules as in the previous exercise. Compare the ranking of 
+#the recommendations for the friend-of-afriend link prediction function with the 
+#matrix exponential. Explain your observations.
+ranking_exp = link_prediction(link_prediction_exp,7);
