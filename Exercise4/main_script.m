@@ -33,11 +33,15 @@ f_u = total_fof./d_u;
 #Explain the results.
 
 tf = f_u-d_u>0;
-du_lower = nnz(tf);
+du_lower = nnz(tf); 
 tf = f_u-d_u==0;
 du_equal = nnz(tf);
 tf = f_u-d_u<0;
 du_greater = nnz(tf);
+# EXPLANATION: So, the number of d(u) lower than f(u) is large, because most people
+# have les friends then their friends. This is probably because the popular people
+# impact the growth of the average number of friends of friends.  
+
 #Compute the average number of friends ¯d in network. Compute the average 
 #¯f over the average numberof friends that friends have.
 #Compare the values ¯d and ¯f. Explain the results
