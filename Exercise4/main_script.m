@@ -69,7 +69,10 @@ fof_A = A*A;
 [u, lambda] = eigs(A,16);
 eig_sqr = u * (lambda*lambda) * u';
 
+
+
 # Are both resulting matrices identical? Why?
+# the result is identical because A = u * lambda * u' and A^2 = u * lambda^2 * u'
 
 #How many common friends do the users 7 and 10 have? How many common friends do
 # the users 7 and 15 have?
